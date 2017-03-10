@@ -12,33 +12,50 @@ public class Tokenizer {
 		tokens.add(new Token(type, regex));
 	}
 
-	public static void tokenize(String text) {
+	public static ArrayList<Lexeme> tokenize(String text) {
 		if (tokens.isEmpty()) {
 			initialize();
 		}
 
+		ArrayList<Lexeme> lexemes = new ArrayList<Lexeme>();
+
 		int current_pos = 0;
+		String unmatched_block = "";
 
 		while (current_pos != text.length()) {
 			boolean matched = false;
 			for (Token token : tokens) {
-				Matcher matcher = token.getPattern().matcher(
-						text.substring(current_pos));
+				Matcher matcher = token.getPattern().matcher(text);
+				matcher.region(current_pos, text.length());
 				// Checking that "matcher.end() != 0" just in case a token was
 				// added whose regex matches empty strings.
 				if (matcher.lookingAt() && matcher.end() != 0) {
-					System.out.println("<" + token.getType() + ">: "
-							+ matcher.group());
-					current_pos += matcher.end();
+					if (!unmatched_block.isEmpty()) {
+						lexemes.add(new Lexeme("UNMATCHED_BLOCK",
+								unmatched_block));
+						unmatched_block = "";
+					}
+					lexemes.add(new Lexeme(token.getType(), matcher.group()));
+					current_pos = matcher.end();
 					matched = true;
 					break;
 				}
 			}
 			if (!matched) {
+				if (text.charAt(current_pos) == ' ') {
+					if (!unmatched_block.isEmpty()) {
+						lexemes.add(new Lexeme("UNMATCHED_BLOCK",
+								unmatched_block));
+						unmatched_block = "";
+					}
+				} else {
+					unmatched_block += text.charAt(current_pos);
+				}
 				++current_pos;
 			}
 		}
 
+		return lexemes;
 	}
 
 	private static void initialize() {
@@ -65,37 +82,36 @@ public class Tokenizer {
 		addToken("LESS_THAN", "<");
 		addToken("GREATER_THAN", "<");
 
-		addToken("IF", "\bif\b");
-		addToken("ELSE", "\belse\b");
-		addToken("WHILE", "\bwhile\b");
+		addToken("IF", "\\bif\\b");
+		addToken("ELSE", "\\belse\\b");
+		addToken("WHILE", "\\bwhile\\b");
 
-		addToken("RETURN", "\breturn\b");
+		addToken("RETURN", "\\breturn\\b");
 
-		addToken("THIS", "\bthis\b");
+		addToken("THIS", "\\bthis\\b");
 
-		addToken("CLASS", "\bclass\b");
+		addToken("CLASS", "\\bclass\\b");
 
-		addToken("PUBLIC", "\bpublic\b");
-		addToken("PRIVATE", "\bprivate\b");
+		addToken("PUBLIC", "\\bpublic\\b");
+		addToken("PRIVATE", "\\bprivate\\b");
 
-		addToken("EXTENDS", "\bextends\b");
+		addToken("EXTENDS", "\\bextends\\b");
 
-		addToken("SYSTEM.OUT.PRINTLN", "\bSystem\\.out\\.println\b");
+		addToken("SYSTEM.OUT.PRINTLN", "\\bSystem\\.out\\.println\\b");
 
-		addToken("STATIC", "\bstatic\b");
+		addToken("STATIC", "\\bstatic\\b");
 
-		addToken("NEW", "\bnew\b");
+		addToken("NEW", "\\bnew\\b");
 
-		addToken("FLOAT", "\bfloat\b");
-		addToken("INT", "\bint\b");
-		addToken("CHARACTER", "\bchar\b");
-		addToken("BOOLEAN", "\bboolean\b");
-		addToken("String", "\bString\b");
-		addToken("VOID", "\bvoid\b");
+		addToken("FLOAT", "\\bfloat\\b");
+		addToken("INT", "\\bint\\b");
+		addToken("CHARACTER", "\\bchar\\b");
+		addToken("BOOLEAN", "\\bboolean\\b");
+		addToken("String", "\\bString\\b");
+		addToken("VOID", "\\bvoid\\b");
 
-		
-		addToken("TRUE", "\btrue\b");
-		addToken("FALSE", "\bfalse\b");
+		addToken("TRUE", "\\btrue\\b");
+		addToken("FALSE", "\\bfalse\\b");
 
 		// Brackets.
 		addToken("LEFT_CURLY_BRACKET", "\\{");
@@ -107,18 +123,18 @@ public class Tokenizer {
 
 		addToken("COMMA", ",");
 		addToken("SEMICOLON", ";");
-		addToken("DOT", "/.");
-		addToken("NOT", "/!");
+		addToken("DOT", "\\.");
+		addToken("NOT", "\\!");
 
 		addToken("AND", "&&");
 
 		// Literals.
-		addToken("FLOAT_LITERAL", "[0-9]*\\.[0-9]*");
-		addToken("INTEGRAL_LITERAL", "[0-9]+");
+		addToken("FLOAT_LITERAL", "\\b[0-9]*\\.[0-9]*\\b");
+		addToken("INTEGRAL_LITERAL", "\\b[0-9]+\\b");
 		addToken("CHARACTER_LITERAL", "'.'");
 		addToken("STRING_LITERAL", "\".*\"");
 
-		addToken("VARIABLE_NAME", "[a-z]+");
+		addToken("VARIABLE_NAME", "\\b[a-z]+\\w*\\b");
 
 		addToken("SINGLE_QUOTE", "'");
 		addToken("DOUBLE_QUOTE", "\"");

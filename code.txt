@@ -1,1 +1,16 @@
- int intvalue = 10+5; 
+ int intvalue101 = 10+!5
+ 
+ 
+ /* 
+ asd
+ /*
+ asd
+ 
+ asdasd
+ 
+ */ 
+ 
+ /*
+ ;class;
+ 
+ 1asd 
