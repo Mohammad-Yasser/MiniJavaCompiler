@@ -3,7 +3,7 @@ package lexical_analyzer;
 public class Lexeme {
 	private String token_type;
 	private String content;
-
+	
 	public Lexeme(String token_type, String content) {
 		this.token_type = token_type;
 		this.content = content;
