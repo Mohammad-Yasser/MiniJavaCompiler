@@ -1,0 +1,53 @@
+Goal ::= MainClass ClassDeclarations
+
+ClassDeclarations ::= ClassDeclaration ClassDeclarations | ""
+
+MainClass ::= "class" Identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" Identifier ")" "{" Statement "}" "}"
+
+ClassDeclaration ::= "class" Identifier "{" ClassBody "}"
+
+ClassBody ::= VarDeclarations MethodDeclarations
+
+VarDeclarations ::= VarDeclaration VarDeclarations | ""
+
+VarDeclaration ::= Type Identifier ";"
+
+MethodDeclarations ::= MethodDeclaration MethodDeclarations | ""
+
+MethodDeclaration ::= VisibilityScope Type Identifier "(" MethodParameters ")" "{" Statement "}"
+
+MethodParameters ::= MethodParameter OtherMethodParameters | ""
+
+OtherMethodParameters ::= "," MethodParameter OtherMethodParameters | ""
+
+MethodParameter ::= Type Identifier
+
+VisibilityScope ::= "public" | "private"
+
+Statement ::= VarDeclarations
+
+Identifier ::= <Identifier>
+
+Type ::= "int" | "boolean"
+
+Statements ::= Statement  Statements | ""
+
+Statement ::= "{" Statements "}" | "while" "(" Expression ")" Statement
+
+Statement ::= "System.out.println" "(" Expression ")" ";"
+
+Statement ::= Identifier "=" Expression ";"
+
+Statement ::= "if" "(" Expression ")" Statement OptionalElse
+
+OptionalElse ::= "else" Statement | ""
+
+ExpressionT ::= "new" "int" "[" Expression "]" | "new" Identifier "(" ")" | "true" | "false"
+
+ExpressionT ::= Identifier | "this"  | "!" Expression | "(" Expression ")"
+
+ExpressionC ::= Operator Expression | "[" Expression "]" | "." "length" | ""
+
+Expression ::= ExpressionT ExpressionC 
+
+Operator ::= "&&" | "<" | "+" | "-" | "*"  

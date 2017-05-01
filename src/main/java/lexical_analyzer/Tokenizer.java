@@ -8,7 +8,9 @@ import lexical_analyzer.Token;
 
 public class Tokenizer {
   private static void addToken(String type, String regex) {
-    Token.getTokens().put(type, new Token(type, regex));
+    Token token = new Token(type, regex);
+    Token.getTokens().put(type, token);
+    tokens.add(token);
   }
 
   public static ArrayList<Lexeme> tokenize(String text) {
@@ -23,8 +25,7 @@ public class Tokenizer {
 
     while (current_pos != text.length()) {
       boolean matched = false;
-      for (Entry<String, Token> entry : Token.getTokens().entrySet()) {
-        Token token = entry.getValue();
+      for (Token token : tokens) {
         Matcher matcher = token.getPattern().matcher(text);
         matcher.region(current_pos, text.length());
         // Checking "!matcher.group().isEmpty()" just in case a token
@@ -41,7 +42,7 @@ public class Tokenizer {
         }
       }
       if (!matched) {
-        if (text.charAt(current_pos) == ' ') {
+        if (text.charAt(current_pos) == ' ' || text.charAt(current_pos) == '\n') {
           if (!unmatched_block.isEmpty()) {
             lexemes.add(new Lexeme("UNMATCHED_BLOCK", unmatched_block));
             unmatched_block = "";
@@ -56,6 +57,16 @@ public class Tokenizer {
     return lexemes;
   }
 
+  public static Token getTokenByRegex(String regex) {
+    for (Token token : tokens) {
+      if (token.matches(regex)) {
+        return token;
+      }
+    }
+
+    return null;
+  }
+
   private static void initialize() {
     // Assure that tokens are added in the correct precedence order. E.g. if
     // "VARIABLE_NAME" preceded "INT", then all "INT"s would be matched to
@@ -68,7 +79,7 @@ public class Tokenizer {
     addToken("COMMENT_L", "\\/\\*");
     addToken("COMMENT_R", "\\*\\/");
 
-    addToken("EOL", "\\n");
+    // addToken("EOL", "\\n");
 
     // Arithmetic operators.
     addToken("PLUS", "\\+");
@@ -93,6 +104,8 @@ public class Tokenizer {
 
     addToken("PUBLIC", "\\bpublic\\b");
     addToken("PRIVATE", "\\bprivate\\b");
+
+    addToken("LENGTH", "\\blength\\b");
 
     addToken("EXTENDS", "\\bextends\\b");
 
@@ -133,9 +146,12 @@ public class Tokenizer {
     addToken("CHARACTER_LITERAL", "'.'");
     addToken("STRING_LITERAL", "\".*\"");
 
-    addToken("VARIABLE_NAME", "\\b[a-z]+\\w*\\b");
+    addToken("Identifier", "\\b[a-zA-Z]+\\w*\\b");
 
     addToken("SINGLE_QUOTE", "'");
     addToken("DOUBLE_QUOTE", "\"");
   }
+
+  // Conserves the precedence.
+  private static ArrayList<Token> tokens = new ArrayList<Token>();
 }

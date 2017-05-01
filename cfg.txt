@@ -1,0 +1,71 @@
+Goal ::= MainClass ClassDeclarations
+
+ClassDeclarations ::= ClassDeclaration ClassDeclarations | ""
+
+MainClass ::= "class" Identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" Identifier ")" "{" Statements "}" "}"
+
+ClassDeclaration ::= "class" Identifier "{" ClassBody "}"
+
+ClassBody ::= VarDeclarations MethodDeclarations
+
+VarDeclarations ::= VarDeclaration VarDeclarations | ""
+
+VarDeclaration ::= Type Identifier ";"
+
+MethodDeclarations ::= MethodDeclaration MethodDeclarations | ""
+
+MethodDeclaration ::= VisibilityScope Type Identifier "(" MethodParameters ")" "{" Statements "}"
+
+MethodParameters ::= MethodParameter OtherMethodParameters | ""
+
+OtherMethodParameters ::= "," MethodParameter OtherMethodParameters | ""
+
+MethodParameter ::= Type Identifier
+
+VisibilityScope ::= "public" | "private"
+
+Type ::= "int" | "boolean"
+
+Statements ::= Statement Statements | ""
+
+Statement ::= VarDeclaration
+
+Statement ::= Identifier "=" Expression ";"
+
+Statement ::= "{" Statements "}" | "while" "(" Expression ")" Statement
+
+Statement ::= "System.out.println" "(" Expression ")" ";"
+
+Statement ::= "if" "(" Expression ")" Statement OptionalElse
+
+Statement ::= "return" Expression ";"
+
+OptionalElse ::= "else" Statement | ""
+
+ExpressionT ::= "new" TypeOrIdentifier ExpressionB | "true" | "false"
+
+TypeOrIdentifier ::= Type | Identifier
+
+ExpressionSqB ::= "[" Expression "]"
+
+ExpressionRB ::= "(" Expression? ")"
+
+Expression? ::= Expression | ""
+
+ExpressionB ::= ExpressionSqB | ExpressionRB
+
+ExpressionT ::= Identifier | "this"  | "!" Expression | "(" Expression ")" | INTEGRAL_LITERAL
+
+ExpressionC ::= Operator Expression | "[" Expression "]" | "." LengthOrFunctionCall | ""
+
+LengthOrFunctionCall ::= "length" | FunctionCall
+
+FunctionCall ::= Identifier "(" Arguments ")"
+
+Arguments ::= Expression OtherArguments | ""
+
+OtherArguments ::= "," Expression OtherArguments | ""
+
+Expression ::= ExpressionT ExpressionC 
+
+Operator ::= "&&" | "<" | "+" | "-" | "*"  

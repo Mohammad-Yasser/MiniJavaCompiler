@@ -1,31 +1,32 @@
 package lexical_analyzer;
 
 public class Lexeme {
-	private String token_type;
-	private String content;
-	
-	public Lexeme(String token_type, String content) {
-		this.token_type = token_type;
-		this.content = content;
-	}
 
-	public String toString() {
-		return "<" + token_type + ">: -" + content + "-\n";
-	}
+  public Lexeme(String token_type, String content) {
+    this.tokenType = token_type;
+    this.content = content;
+  }
 
-	public String getToken_type() {
-		return token_type;
-	}
+  public String toString() {
+    return "<" + tokenType + ">: -" + content + "-\n";
+  }
 
-	public void setToken_type(String token_type) {
-		this.token_type = token_type;
-	}
+  public String getTokenType() {
+    return tokenType;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public void setTokenType(String token_type) {
+    this.tokenType = token_type;
+  }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  private String tokenType;
+  private String content;
 }

@@ -16,10 +16,14 @@ public class Symbol {
     return symbols.get(label);
   }
 
+  public String toString() {
+    return label;
+  }
+
   // Creates a symbol with the given label, and binds it to a token that has the same label, if
   // exists.
   private Symbol(String label) {
-    this(label, Token.getTokens().get(label));
+    this(label, Token.getToken(label));
   }
 
   // Creates a symbol with the given label, binded to the given token.
@@ -40,12 +44,13 @@ public class Symbol {
     Symbol.symbols = symbols;
   }
 
-  public static String getStartLabel() {
-    return startLabel;
+
+  public static Symbol getStartSymbol() {
+    return startSymbol;
   }
 
-  public static void setStartLabel(String startLabel) {
-    Symbol.startLabel = startLabel;
+  public static void setStartSymbol(Symbol startSymbol) {
+    Symbol.startSymbol = startSymbol;
   }
 
   public ArrayList<Production> getProductions() {
@@ -66,12 +71,12 @@ public class Symbol {
 
   // Maps labels to their corresponding "Symbol" objects.
   private static HashMap<String, Symbol> symbols = new HashMap<String, Symbol>();
-  private static String startLabel;
+  private static Symbol startSymbol;
 
 
 
   private final String label;
   // The corresponding token for terminal symbols. It's set to null for non-terminal symbols.
   private final Token token;
-  private ArrayList<Production> productions;
+  private ArrayList<Production> productions = new ArrayList<>();
 }

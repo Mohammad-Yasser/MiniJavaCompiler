@@ -1,6 +1,7 @@
 package lexical_analyzer;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Token {
@@ -11,6 +12,13 @@ public class Token {
 
   public boolean matches(String lexeme) {
     return pattern.matcher(lexeme).matches();
+  }
+  
+
+  public String getMatchingGroup(String content, int start_index) {
+    Matcher matcher = pattern.matcher(content);
+    matcher.region(start_index, content.length());
+    return matcher.group();
   }
 
   public String getType() {
@@ -31,6 +39,10 @@ public class Token {
 
   public static HashMap<String, Token> getTokens() {
     return tokens;
+  }
+
+  public static Token getToken(String label) {
+    return tokens.get(label);
   }
 
   public static void setTokens(HashMap<String, Token> tokens) {
